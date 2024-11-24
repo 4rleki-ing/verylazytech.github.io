@@ -38,7 +38,7 @@
         }
 
         .search-container {
-            margin: 40px 0;
+            margin: 32px 0;
             text-align: center;
         }
 
@@ -196,15 +196,28 @@
         
             const regex = /(?:^### (.+)|```([^`]+)```)/gm;
             let match, title = "";
+            let currentTitleElement = null;
         
             while ((match = regex.exec(text)) !== null) {
-                if (match[1]) title = match[1];
-                else if (match[2]) {
+                if (match[1]) {
+                    // This is a title, so we create a new <h2> and add it to the page
+                    title = match[1];
+                    currentTitleElement = createTitleElement(title);
+                    dorkListElement.appendChild(currentTitleElement);
+                } else if (match[2]) {
+                    // This is a dork, so add it under the current title
                     const dork = match[2].trim();
-                    originalDorks.push(dork); // Store the dork for later use
-                    dorkListElement.appendChild(createDorkListItem(dork, title));
+                    if (currentTitleElement) {
+                        currentTitleElement.appendChild(createDorkListItem(dork, title));
+                    }
                 }
             }
+        }
+        
+        function createTitleElement(title) {
+            const titleElement = document.createElement("h2");
+            titleElement.textContent = title;
+            return titleElement;
         }
         
         function createDorkListItem(dork, description) {
