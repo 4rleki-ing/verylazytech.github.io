@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore powerful Google Dorks curated for bug bounty hunting. Use these search queries to uncover hidden vulnerabilities and sensitive data - by VeryLazyTech.">
+    <meta name="author" content="VeryLazyTech">
+    <meta name="keywords" content="Google Dorks, Bug Bounty, VeryLazyTech, Ethical Hacking, Penetration Testing">
     <title>Google Dorks for Bug Bounty - By VeryLazyTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #4CAF50;
@@ -135,6 +139,7 @@
             font-size: 0.9em;
             z-index: 1000;
             max-width: 300px;
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -147,9 +152,9 @@
             }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<div class="container">
+<body>
+    <div class="container">
         <h1>Google Dorks for Bug Bounty - By VeryLazyTech</h1>
         
         <div class="social-links">
@@ -171,149 +176,50 @@
             <label for="domainInput">Enter a domain:</label>
             <input type="text" id="domainInput" placeholder="example.com" oninput="updateDomain()">
         </div>
-        
-        <div id="tooltip" class="hidden">For multiple domains, separate by comma. e.g., example1.com, example2.com</div>
+
+        <div id="tooltip">For multiple domains, separate by comma. e.g., example1.com, example2.com</div>
     </div>
 
     <ul id="dorkList"></ul>
 
-    <section>
-        <h2>Additional Resources</h2>
-        <ul class="link-list">
-            <li><a href="https://github.com/TakSec/google-dorks-bug-bounty/" target="_blank" rel="noopener">Google Dorks For Bug Bounty</a></li>
-            <li><a href="https://thegrayarea.tech/5-google-dorks-every-hacker-needs-to-know-fed21022a906" target="_blank" rel="noopener">5 Google Dorks Every Hacker Needs to Know</a></li>
-            <li><a href="https://infosecwriteups.com/uncover-hidden-gems-in-the-cloud-with-google-dorks-8621e56a329d" target="_blank" rel="noopener">Uncover Hidden Gems in the Cloud with Google Dorks</a></li>
-            <li><a href="https://infosecwriteups.com/10-google-dorks-for-sensitive-data-9454b09edc12" target="_blank" rel="noopener">10 Google Dorks for Sensitive Data</a></li>
-        </ul>
-    </section>
-
     <script>
-        const domainInput = document.getElementById('domainInput');
-        const tooltip = document.getElementById('tooltip');
+        const dorkListElement = document.getElementById("dorkList");
+        const tooltip = document.getElementById("tooltip");
 
-        domainInput.addEventListener('mouseover', function() {
-            tooltip.style.display = 'block';
-            tooltip.style.left = domainInput.offsetLeft + 'px';
-            tooltip.style.top = (domainInput.offsetTop + domainInput.offsetHeight + 5) + 'px';
-        });
+        document.getElementById("domainInput").addEventListener("input", updateDomain);
 
-        domainInput.addEventListener('mouseout', function() {
-            tooltip.style.display = 'none';
-        });
-        
-        let originalDorks = [];
-        
         async function fetchDorks() {
             const url = "https://raw.githubusercontent.com/TakSec/google-dorks-bug-bounty/main/README.md";
             const response = await fetch(url);
             const text = await response.text();
 
-            const dorkList = document.getElementById("dorkList");
             const regex = /(?:^### (.+)|```([^`]+)```)/gm;
-            let match;
-            let title = '';
-            let firstDork = true;
+            let match, title = "";
 
             while ((match = regex.exec(text)) !== null) {
-        if (match[1]) {
-            // Title match
-            title = match[1];
-        } else if (match[2]) {
-            // Dork match
-            const dork = match[2].trim();
-            originalDorks.push(dork);
-            const listItem = createDorkListItem(dork, title);
-            dorkList.appendChild(listItem);
+                if (match[1]) title = match[1];
+                else if (match[2]) dorkListElement.appendChild(createDorkListItem(match[2].trim(), title));
+            }
         }
-    }
-    filterDorks();
-
-    }
-        
-    let prevTitle = '';
 
         function createDorkListItem(dork, description) {
-            const googleLink = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
-
             const listItem = document.createElement("li");
-
-            if (description && description !== prevTitle) {
-                const desc = document.createElement("p");
-                desc.textContent = description;
-                desc.classList.add("description");
-                listItem.appendChild(desc);
-                prevTitle = description;
-            }
-
-            const link = document.createElement("a");
-            link.href = googleLink;
-            link.textContent = dork;
-            link.classList.add("dorkLink");
-            link.target = "_blank";
-
-            listItem.appendChild(link);
-
+            if (description) listItem.innerHTML = `<p class="description">${description}</p>`;
+            listItem.innerHTML += `<a href="https://www.google.com/search?q=${encodeURIComponent(dork)}" target="_blank">${dork}</a>`;
             return listItem;
         }
 
         function updateDomain() {
-            const domainInput = document.getElementById("domainInput");
-            const domains = domainInput.value.split(",").map(domain => domain.trim());
-        
-            if (domains.length === 0) return;
-        
-            const dorkLinks = document.querySelectorAll(".dorkLink");
-            dorkLinks.forEach((link, index) => {
-                let originalDork = originalDorks[index];
-                
-                // Check if the dork is related to Drupal and skip modification
-                if (originalDork.includes("Drupal")) {
-                    return; // Skip any modification if it's a Drupal related dork
-                }
+            const domain = document.getElementById("domainInput").value.trim();
+            if (!domain) return;
 
-                // For site:example.com
-                if (/site:"?example\[?\.\]?com"?/i.test(originalDork)) {
-                    const joinedDomains = domains.map(d => `site:${d}`).join(" | ");
-                    originalDork = originalDork.replace(/site:"?example\[?\.\]?com"?/gi, joinedDomains);
-                }
-                
-                // For "example.com"
-                else if (/["']example\[?\.\]?com["']/i.test(originalDork)) {
-                    const joinedDomains = domains.map(d => `"${d}"`).join(" | ");
-                    originalDork = originalDork.replace(/["']example\[?\.\]?com["']/gi, joinedDomains);
-                }
-                
-                // For intext:"example.com" and similar patterns
-                const intextPattern = /intext:"example\.com"/gi;
-                if (intextPattern.test(originalDork)) {
-                    const joinedDomains = domains.map(d => `intext:"${d}"`).join(" | ");
-                    updatedDork = originalDork.replace(intextPattern, joinedDomains);
-                }
-                // Update intext:"" for all domains after the first
-                if (originalDork.includes('intext:"')) {
-                    const joinedDomains = domains.map((d, idx) => idx === 0 ? `intext:"${d}"` : `intext:"${d}"`).join(" | ");
-                    originalDork = originalDork.replace(/intext:"([^"]+)"/gi, joinedDomains);
-                    originalDork = originalDork.replace(/ \| "([^"]+)"/gi, " | ");
-                }
-
-                const updatedLink = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
-            
-                link.textContent = originalDork;
-                link.href = updatedLink;
+            [...dorkListElement.querySelectorAll("a")].forEach((link) => {
+                const originalDork = link.textContent;
+                link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork.replace(/example\.com/gi, domain))}`;
             });
         }
-        
-        fetchDorks();
-        
-        function filterDorks() {
-    const dorkItems = document.querySelectorAll("#dorkList li");
-    dorkItems.forEach(item => {
-        if (item.textContent.toLowerCase().includes("omit")) {
-            item.style.display = "none";
-        }
-    });
-}
 
+        fetchDorks();
     </script>
 </body>
 </html>
