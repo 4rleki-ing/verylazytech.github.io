@@ -185,59 +185,65 @@
     <script>
         const dorkListElement = document.getElementById("dorkList");
         const tooltip = document.getElementById("tooltip");
-
+        let originalDorks = []; // Store original dorks for reference
+        
         document.getElementById("domainInput").addEventListener("input", updateDomain);
-
+        
         async function fetchDorks() {
             const url = "https://raw.githubusercontent.com/verylazytech/verylazytech.github.io/main/README.md";
             const response = await fetch(url);
             const text = await response.text();
-
+        
             const regex = /(?:^### (.+)|```([^`]+)```)/gm;
             let match, title = "";
-
+        
             while ((match = regex.exec(text)) !== null) {
                 if (match[1]) title = match[1];
-                else if (match[2]) dorkListElement.appendChild(createDorkListItem(match[2].trim(), title));
+                else if (match[2]) {
+                    const dork = match[2].trim();
+                    originalDorks.push(dork); // Store the dork for later use
+                    dorkListElement.appendChild(createDorkListItem(dork, title));
+                }
             }
         }
-
+        
         function createDorkListItem(dork, description) {
             const listItem = document.createElement("li");
             if (description) listItem.innerHTML = `<p class="description">${description}</p>`;
-            listItem.innerHTML += `<a href="https://www.google.com/search?q=${encodeURIComponent(dork)}" target="_blank">${dork}</a>`;
+            listItem.innerHTML += `<a class="dorkLink" href="https://www.google.com/search?q=${encodeURIComponent(dork)}" target="_blank">${dork}</a>`;
             return listItem;
         }
-
+        
         function updateDomain() {
-        const domainInput = document.getElementById("domainInput");
-        const domains = domainInput.value.split(",").map(domain => domain.trim());
-    
-        if (domains.length === 0) return;
-    
-        const dorkLinks = document.querySelectorAll(".dorkLink");
-        dorkLinks.forEach((link, index) => {
-            let originalDork = originalDorks[index];
-            
-            const domainPatterns = [
-                /site:\s?"?example.com"?/gi, // Matches site:"example.com" or site:example.com
-                /"example.com"/gi,          // Matches "example.com"
-                /intext:"example.com"/gi    // Matches intext:"example.com"
-            ];
-    
-            domainPatterns.forEach(pattern => {
-                if (pattern.test(originalDork)) {
-                    const joinedDomains = domains.map(d => pattern.source.includes('intext') ? `intext:"${d}"` : `site:${d}`).join(" | ");
-                    originalDork = originalDork.replace(pattern, joinedDomains);
-                }
+            const domainInput = document.getElementById("domainInput");
+            const domains = domainInput.value.split(",").map(domain => domain.trim()).filter(Boolean);
+        
+            if (domains.length === 0) return;
+        
+            const dorkLinks = document.querySelectorAll(".dorkLink");
+            dorkLinks.forEach((link, index) => {
+                let originalDork = originalDorks[index];
+        
+                const domainPatterns = [
+                    /site:\s?"?example.com"?/gi, // Matches site:"example.com" or site:example.com
+                    /"example.com"/gi,          // Matches "example.com"
+                    /intext:"example.com"/gi    // Matches intext:"example.com"
+                ];
+        
+                domainPatterns.forEach(pattern => {
+                    if (pattern.test(originalDork)) {
+                        const joinedDomains = domains.map(d => pattern.source.includes('intext') ? `intext:"${d}"` : `site:${d}`).join(" | ");
+                        originalDork = originalDork.replace(pattern, joinedDomains);
+                    }
+                });
+        
+                // Update the link and display text
+                const updatedLink = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
+                link.textContent = originalDork;
+                link.href = updatedLink;
             });
-    
-            // Update the link and display text
-            const updatedLink = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
-            link.textContent = originalDork;
-            link.href = updatedLink;
-        });
-    }
+        }
+        
         fetchDorks();
     </script>
 </body>
