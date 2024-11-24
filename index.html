@@ -13,7 +13,7 @@
             --primary-color: #9C27B0;
             --background-color: #1C1C1C;
             --text-color: #ffffff;
-            --accent-color:#E1BEE7;
+            --accent-color: #E1BEE7;
             --border-color: rgba(255, 255, 255, 0.1);
         }
 
@@ -68,23 +68,6 @@
             background-color: rgba(255, 255, 255, 0.08);
         }
 
-        .social-links {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .social-links a {
-            display: inline-block;
-            margin: 0 0px;
-            padding: 4px 8px;
-            color: #888;
-            transition: color 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--accent-color);
-        }
-
         #dorkList {
             margin: 40px 0;
             padding: 0;
@@ -118,40 +101,6 @@
             letter-spacing: 1px;
         }
 
-        section {
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        h2 {
-            font-size: 1.8em;
-            color: #888;
-            margin-bottom: 20px;
-        }
-
-        #tooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #888;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            z-index: 1000;
-            max-width: 300px;
-            display: none;
-        }
-
-        pre {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 5px;
-            overflow-x: auto;
-            font-family: 'Courier New', Courier, monospace;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
         @media (max-width: 768px) {
             body {
                 padding: 20px;
@@ -167,35 +116,19 @@
     <div class="container">
         <h1>Google Dorks for Bug Bounty - By VeryLazyTech</h1>
         
-        <div class="social-links">
-            <a href="https://x.com/verylazytech" target="_blank" rel="noopener">
-                <img src="https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fverylazytech" alt="X Follow">
-            </a>
-            <a href="https://github.com/verylazytech" target="_blank" rel="noopener">
-                <img src="https://img.shields.io/badge/Github-verylazytech-%23181717?style=flat&logo=github&logoColor=white" alt="Github">
-            </a>
-            <a href="https://buymeacoffee.com/verylazytech/extras" target="_blank" rel="noopener">
-                <img src="https://img.shields.io/badge/My%20Shop-verylazytech-%23FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=yellow" alt="My shop">
-            </a>
-            <a href="https://www.verylazytech.com" target="_blank" rel="noopener">
-                <img src="https://img.shields.io/badge/My%20GitBook-VeryLazyTech-%23FFDD00?style=flat&logo=gitbook&logoColor=white" alt="My Gitbook">
-            </a>
-        </div>
-
         <div class="search-container">
             <label for="domainInput">Enter a domain:</label>
             <input type="text" id="domainInput" placeholder="example.com" oninput="updateDomain()">
         </div>
-
-        <div id="tooltip">For multiple domains, separate by comma. e.g., example1.com, example2.com</div>
     </div>
 
-    <!-- Code block where the dorks will be displayed -->
-    <pre id="dorkList"></pre>
+    <!-- List to display dorks in the desired style -->
+    <ul id="dorkList"></ul>
 
     <script>
         const dorkListElement = document.getElementById("dorkList");
-        const tooltip = document.getElementById("tooltip");
+        const domainInput = document.getElementById("domainInput");
+
         let originalDorks = []; // Store original dorks for reference
 
         document.getElementById("domainInput").addEventListener("input", updateDomain);
@@ -217,18 +150,37 @@
 
                     // Only append the title once when the first dork appears under a title
                     if (currentTitle) {
-                        dorkListElement.innerHTML += `${currentTitle}\n`;
-                        currentTitle = ''; // Reset the title to prevent repetition
-                    }
+                        const liElement = document.createElement("li");
+                        const descriptionElement = document.createElement("p");
+                        descriptionElement.classList.add("description");
+                        descriptionElement.textContent = currentTitle;
+                        liElement.appendChild(descriptionElement);
 
-                    // Add the dork to the code block, separated by newline
-                    dorkListElement.innerHTML += `${dork}\n`;
+                        const linkElement = document.createElement("a");
+                        linkElement.classList.add("dorkLink");
+                        linkElement.setAttribute("href", `https://www.google.com/search?q=${encodeURIComponent(dork)}`);
+                        linkElement.setAttribute("target", "_blank");
+                        linkElement.textContent = dork;
+
+                        liElement.appendChild(linkElement);
+                        dorkListElement.appendChild(liElement);
+
+                        currentTitle = ''; // Reset the title to prevent repetition
+                    } else {
+                        const liElement = document.createElement("li");
+                        const linkElement = document.createElement("a");
+                        linkElement.classList.add("dorkLink");
+                        linkElement.setAttribute("href", `https://www.google.com/search?q=${encodeURIComponent(dork)}`);
+                        linkElement.setAttribute("target", "_blank");
+                        linkElement.textContent = dork;
+                        liElement.appendChild(linkElement);
+                        dorkListElement.appendChild(liElement);
+                    }
                 }
             }
         }
 
         function updateDomain() {
-            const domainInput = document.getElementById("domainInput");
             const domains = domainInput.value.split(",").map(domain => domain.trim()).filter(Boolean);
 
             if (domains.length === 0) return;
@@ -237,18 +189,12 @@
             dorkLinks.forEach((link, index) => {
                 let originalDork = originalDorks[index];
 
-                const domainPatterns = [
-                    /site:\s?"?example.com"?/g
-                ];
-
                 domains.forEach(domain => {
-                    domainPatterns.forEach(pattern => {
-                        originalDork = originalDork.replace(pattern, `site:"${domain}"`);
-                    });
+                    originalDork = originalDork.replace(/site:"?[^"]+"?/g, `site:"${domain}"`);
                 });
 
                 link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
-                link.innerHTML = originalDork;
+                link.textContent = originalDork;
             });
         }
 
