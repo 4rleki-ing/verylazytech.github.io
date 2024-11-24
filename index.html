@@ -210,15 +210,34 @@
         }
 
         function updateDomain() {
-            const domain = document.getElementById("domainInput").value.trim();
-            if (!domain) return;
-
-            [...dorkListElement.querySelectorAll("a")].forEach((link) => {
-                const originalDork = link.textContent;
-                link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork.replace(/example\.com/gi, domain))}`;
+        const domainInput = document.getElementById("domainInput");
+        const domains = domainInput.value.split(",").map(domain => domain.trim());
+    
+        if (domains.length === 0) return;
+    
+        const dorkLinks = document.querySelectorAll(".dorkLink");
+        dorkLinks.forEach((link, index) => {
+            let originalDork = originalDorks[index];
+            
+            const domainPatterns = [
+                /site:\s?"?example.com"?/gi, // Matches site:"example.com" or site:example.com
+                /"example.com"/gi,          // Matches "example.com"
+                /intext:"example.com"/gi    // Matches intext:"example.com"
+            ];
+    
+            domainPatterns.forEach(pattern => {
+                if (pattern.test(originalDork)) {
+                    const joinedDomains = domains.map(d => pattern.source.includes('intext') ? `intext:"${d}"` : `site:${d}`).join(" | ");
+                    originalDork = originalDork.replace(pattern, joinedDomains);
+                }
             });
-        }
-
+    
+            // Update the link and display text
+            const updatedLink = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
+            link.textContent = originalDork;
+            link.href = updatedLink;
+        });
+    }
         fetchDorks();
     </script>
 </body>
