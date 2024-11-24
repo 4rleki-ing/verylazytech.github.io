@@ -64,84 +64,54 @@
             background-color: rgba(255, 255, 255, 0.08);
         }
 
-        .social-links {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            padding: 8px 16px;
-            color: #888;
-            transition: color 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--accent-color);
-        }
-
         #dorkList {
             margin: 40px 0;
             padding: 0;
+            list-style: none;
         }
 
-        li {
-            padding: 20px 0;
-            border-bottom: 1px solid var(--border-color);
-            transition: transform 0.2s ease;
+        .dork-item {
+            padding: 20px;
+            margin: 10px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s ease, background-color 0.3s ease;
         }
 
-        li:hover {
+        .dork-item:hover {
             transform: translateX(10px);
+            background-color: rgba(255, 255, 255, 0.08);
         }
 
-        a {
-            text-decoration: none;
-            color: var(--text-color);
-            transition: color 0.2s ease;
-        }
-
-        a:hover {
-            color: var(--accent-color);
-        }
-
-        p.description {
+        .dork-item p {
+            margin: 0;
             color: #888;
-            font-size: 0.9em;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        section {
-            margin-top: 60px;
-            padding-top: 20px;
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #888;
             border-top: 1px solid var(--border-color);
+            padding-top: 20px;
         }
 
-        h2 {
-            font-size: 1.8em;
-            color: #888;
-            margin-bottom: 20px;
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
         }
 
-        #tooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #888;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            z-index: 1000;
-            max-width: 300px;
+        footer a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
             body {
                 padding: 20px;
             }
-            
+
             input {
                 width: calc(100% - 40px);
             }
