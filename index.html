@@ -186,84 +186,65 @@
         const dorkListElement = document.getElementById("dorkList");
         const tooltip = document.getElementById("tooltip");
         let originalDorks = []; // Store original dorks for reference
-        
+
         document.getElementById("domainInput").addEventListener("input", updateDomain);
-        
+
         async function fetchDorks() {
             const url = "https://raw.githubusercontent.com/verylazytech/verylazytech.github.io/main/README.md";
             const response = await fetch(url);
             const text = await response.text();
-        
+
             const regex = /(?:^### (.+)|```([^`]+)```)/gm;
-            let match, title = "";
-            
-            let currentTitle = ''; // Keep track of the current title
-        
+            let match, currentTitle = ""; // Track current section title
+
             while ((match = regex.exec(text)) !== null) {
                 if (match[1]) {
-                    // New section title found, save it
-                    currentTitle = match[1].trim();
+                    currentTitle = match[1].trim(); // Update the title when found
                 } else if (match[2]) {
-                    // Dork found, associated with the previous title
                     const dork = match[2].trim();
                     originalDorks.push(dork); // Store dork for later use
-                    
-                    // Check if we have already added a title
+
+                    // Only append the title once when the first dork appears under a title
                     if (currentTitle) {
                         dorkListElement.innerHTML += `<strong>${currentTitle}</strong><br>`;
-                        currentTitle = ''; // Reset title to prevent repeating
+                        currentTitle = ''; // Reset the title to prevent repetition
                     }
-        
-                    // Add the dork link directly under the title (same section)
+
+                    // Add the dork link below the title
                     dorkListElement.innerHTML += `<a class="dorkLink" href="https://www.google.com/search?q=${encodeURIComponent(dork)}" target="_blank">${dork}</a><br>`;
                 }
             }
         }
-        
-        function createTitleElement(title) {
-            const titleElement = document.createElement("h2");
-            titleElement.textContent = title;
-            return titleElement;
-        }
-        
-        function createDorkListItem(dork, description) {
-            const listItem = document.createElement("li");
-            if (description) listItem.innerHTML = `<p class="description">${description}</p>`;
-            listItem.innerHTML += `<a class="dorkLink" href="https://www.google.com/search?q=${encodeURIComponent(dork)}" target="_blank">${dork}</a>`;
-            return listItem;
-        }
-        
+
         function updateDomain() {
             const domainInput = document.getElementById("domainInput");
             const domains = domainInput.value.split(",").map(domain => domain.trim()).filter(Boolean);
-        
+
             if (domains.length === 0) return;
-        
+
             const dorkLinks = document.querySelectorAll(".dorkLink");
             dorkLinks.forEach((link, index) => {
                 let originalDork = originalDorks[index];
-        
+
                 const domainPatterns = [
-                    /site:\s?"?example.com"?/gi, // Matches site:"example.com" or site:example.com
-                    /"example.com"/gi,          // Matches "example.com"
-                    /intext:"example.com"/gi    // Matches intext:"example.com"
+                    /site:\s?"?example.com"?/gi, 
+                    /"example.com"/gi,
+                    /intext:"example.com"/gi
                 ];
-        
+
                 domainPatterns.forEach(pattern => {
                     if (pattern.test(originalDork)) {
-                        const joinedDomains = domains.map(d => pattern.source.includes('intext') ? `intext:"${d}"` : `site:${d}`).join(" | ");
+                        const joinedDomains = domains.map(d => pattern.source.includes('intext') ? `intext:"${d}"` : `site:"${d}"`).join(" ");
                         originalDork = originalDork.replace(pattern, joinedDomains);
                     }
                 });
-        
-                // Update the link and display text
-                const updatedLink = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
-                link.textContent = originalDork;
-                link.href = updatedLink;
+
+                link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
+                link.innerHTML = originalDork;
             });
         }
-        
-        fetchDorks();
+
+        fetchDorks(); // Fetch dorks on page load
     </script>
 </body>
 </html>
