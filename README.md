@@ -17,19 +17,19 @@ Check our online tool: [VeryLazyTechDork](https://verylazytech.github.io/index.h
 ### Broad domain search w/ negative search
 
 ```
-site:example.com -www -shop -share -ir -mfa
+site:"example.com" -www -shop -share -ir -mfa
 ```
 
 ### PHP extension w/ parameters
 
 ```
-site:example.com ext:php inurl:?
+site:"example.com" ext:php inurl:?
 ```
 
 ### API Endpoints
 
 ```
-site:example[.]com inurl:api | site:*/rest | site:*/v1 | site:*/v2 | site:*/v3
+site:"example[.]com" inurl:api | site:*/rest | site:*/v1 | site:*/v2 | site:*/v3
 ```
 
 ### Juicy Extensions
@@ -41,7 +41,7 @@ site:"example[.]com" ext:log | ext:txt | ext:conf | ext:cnf | ext:ini | ext:env 
 ### High % inurl keywords
 
 ```
-inurl:conf | inurl:env | inurl:cgi | inurl:bin | inurl:etc | inurl:root | inurl:sql | inurl:backup | inurl:admin | inurl:php site:example[.]com
+inurl:conf | inurl:env | inurl:cgi | inurl:bin | inurl:etc | inurl:root | inurl:sql | inurl:backup | inurl:admin | inurl:php site:"example[.]com"
 ```
 
 ### Server Errors
