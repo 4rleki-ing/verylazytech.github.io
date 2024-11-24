@@ -221,18 +221,17 @@
             dorkLinks.forEach((link, index) => {
                 let originalDork = originalDorks[index];  // Get the original dork for reference
         
-                // Replace the "site:" part with the new domains
+                // Only replace the domain part after 'site:', preserving other dork parameters
                 domains.forEach(domain => {
-                    // This ensures only the site domain part is replaced
-                    originalDork = originalDork.replace(/site:"?[^"]+"?/g, `site:"${domain}"`);
+                    // This regex matches the site part (site:"domain") and replaces it with the new domain
+                    originalDork = originalDork.replace(/site:"[^"]+"/, `site:"${domain}"`);
                 });
         
-                // Update the href and the text content for each link
+                // Update the href and text of the dork link
                 link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
                 link.textContent = originalDork;  // Display updated dork
             });
         }
-
 
         fetchDorks();
     </script>
