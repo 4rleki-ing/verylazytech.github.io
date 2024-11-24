@@ -214,21 +214,25 @@
 
         function updateDomain() {
             const domains = domainInput.value.split(",").map(domain => domain.trim()).filter(Boolean);
-
+        
             if (domains.length === 0) return;
-
+        
             const dorkLinks = document.querySelectorAll(".dorkLink");
             dorkLinks.forEach((link, index) => {
-                let originalDork = originalDorks[index];
-
+                let originalDork = originalDorks[index];  // Get the original dork for reference
+        
+                // Replace the "site:" part with the new domains
                 domains.forEach(domain => {
+                    // This ensures only the site domain part is replaced
                     originalDork = originalDork.replace(/site:"?[^"]+"?/g, `site:"${domain}"`);
                 });
-
+        
+                // Update the href and the text content for each link
                 link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
-                link.textContent = originalDork;
+                link.textContent = originalDork;  // Display updated dork
             });
         }
+
 
         fetchDorks();
     </script>
