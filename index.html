@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Dorks for Bug Bounty</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .dork-list {
+            list-style: none;
+            padding: 0;
+        }
+        .dork-item {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .dork-item:hover {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Google Dorks for Bug Bounty</h1>
+<p>Search through a list of useful Google Dorks for bug bounty hunting. Use the search bar below to filter results.</p>
+
+<input type="text" id="search" placeholder="Search Google Dorks..." oninput="filterDorks()">
+
+<ul class="dork-list" id="dorkList">
+    <li class="dork-item" data-keywords="login admin page">`inurl:login OR inurl:admin OR intitle:"login page"`</li>
+    <li class="dork-item" data-keywords="database config env ini">`ext:env | ext:ini | ext:config database`</li>
+    <li class="dork-item" data-keywords="backup sql db">`ext:sql | ext:db | ext:sqlite "backup"`</li>
+    <li class="dork-item" data-keywords="open directory index">`intitle:"index of" "parent directory"`</li>
+    <li class="dork-item" data-keywords="exposed credentials password">`filetype:txt "password"`</li>
+</ul>
+
+<script>
+    function filterDorks() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const dorkItems = document.querySelectorAll('.dork-item');
+
+        dorkItems.forEach(item => {
+            const keywords = item.dataset.keywords;
+            if (keywords.toLowerCase().includes(query)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
