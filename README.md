@@ -4,7 +4,7 @@ A list of Google Dorks for Bug Bounty, Web Application Security, and Pentesting
 
 ---
 
-### Broad domain search w/ negative search <!--omit-->
+### Broad domain search w/ negative search
 
 ```
 site:example.com -www -shop -share -ir -mfa
