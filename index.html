@@ -5,63 +5,310 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Dorks for Bug Bounty</title>
     <style>
+        :root {
+            --primary-color: #4CAF50;
+            --background-color: #111111;
+            --text-color: #ffffff;
+            --accent-color: #69f0ae;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 40px 20px;
             line-height: 1.6;
         }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
         }
-        .dork-list {
-            list-style: none;
+
+        .search-container {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #888;
+        }
+
+        input {
+            width: 100%;
+            max-width: 500px;
+            font-size: 1.1em;
+            padding: 12px 20px;
+            border: none;
+            border-bottom: 2px solid var(--border-color);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        input:focus {
+            outline: none;
+            border-bottom-color: var(--accent-color);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .social-links {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 8px 16px;
+            color: #888;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+        }
+
+        #dorkList {
+            margin: 40px 0;
             padding: 0;
         }
-        .dork-item {
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+
+        li {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: transform 0.2s ease;
         }
-        .dork-item:hover {
-            background: #f9f9f9;
+
+        li:hover {
+            transform: translateX(10px);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--accent-color);
+        }
+
+        p.description {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        section {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        #tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #888;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            input {
+                width: calc(100% - 40px);
+            }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="container">
+        <h1>Google Dorks for Bug Bounty</h1>
+        
+        <div class="social-links">
+            <a href="https://twitter.com/TakSec" target="_blank" rel="noopener">
+                <img src="https://img.shields.io/twitter/url/https/twitter.com/TakSec.svg?style=social&label=Follow%20%40TakSec" alt="Twitter Follow Badge">
+            </a>
+            <a href="https://github.com/TakSec/google-dorks-bug-bounty/" target="_blank" rel="noopener">
+                GitHub Repo
+            </a>
+        </div>
 
-<h1>Google Dorks for Bug Bounty</h1>
-<p>Search through a list of useful Google Dorks for bug bounty hunting. Use the search bar below to filter results.</p>
+        <div class="search-container">
+            <label for="domainInput">Enter a domain:</label>
+            <input type="text" id="domainInput" placeholder="example.com" oninput="updateDomain()">
+        </div>
+        
+        <div id="tooltip" class="hidden">For multiple domains, separate by comma. e.g., example1.com, example2.com</div>
+    </div>
 
-<input type="text" id="search" placeholder="Search Google Dorks..." oninput="filterDorks()">
+    <ul id="dorkList"></ul>
 
-<ul class="dork-list" id="dorkList">
-    <li class="dork-item" data-keywords="login admin page">`inurl:login OR inurl:admin OR intitle:"login page"`</li>
-    <li class="dork-item" data-keywords="database config env ini">`ext:env | ext:ini | ext:config database`</li>
-    <li class="dork-item" data-keywords="backup sql db">`ext:sql | ext:db | ext:sqlite "backup"`</li>
-    <li class="dork-item" data-keywords="open directory index">`intitle:"index of" "parent directory"`</li>
-    <li class="dork-item" data-keywords="exposed credentials password">`filetype:txt "password"`</li>
-</ul>
+    <section>
+        <h2>Additional Resources</h2>
+        <ul class="link-list">
+            <li><a href="https://github.com/TakSec/google-dorks-bug-bounty/" target="_blank" rel="noopener">Google Dorks For Bug Bounty</a></li>
+            <li><a href="https://thegrayarea.tech/5-google-dorks-every-hacker-needs-to-know-fed21022a906" target="_blank" rel="noopener">5 Google Dorks Every Hacker Needs to Know</a></li>
+            <li><a href="https://infosecwriteups.com/uncover-hidden-gems-in-the-cloud-with-google-dorks-8621e56a329d" target="_blank" rel="noopener">Uncover Hidden Gems in the Cloud with Google Dorks</a></li>
+            <li><a href="https://infosecwriteups.com/10-google-dorks-for-sensitive-data-9454b09edc12" target="_blank" rel="noopener">10 Google Dorks for Sensitive Data</a></li>
+        </ul>
+    </section>
 
-<script>
-    function filterDorks() {
-        const query = document.getElementById('search').value.toLowerCase();
-        const dorkItems = document.querySelectorAll('.dork-item');
+    <script>
+        const domainInput = document.getElementById('domainInput');
+        const tooltip = document.getElementById('tooltip');
 
-        dorkItems.forEach(item => {
-            const keywords = item.dataset.keywords;
-            if (keywords.toLowerCase().includes(query)) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
+        domainInput.addEventListener('mouseover', function() {
+            tooltip.style.display = 'block';
+            tooltip.style.left = domainInput.offsetLeft + 'px';
+            tooltip.style.top = (domainInput.offsetTop + domainInput.offsetHeight + 5) + 'px';
         });
-    }
-</script>
 
+        domainInput.addEventListener('mouseout', function() {
+            tooltip.style.display = 'none';
+        });
+        
+        let originalDorks = [];
+        
+        async function fetchDorks() {
+            const url = "https://raw.githubusercontent.com/TakSec/google-dorks-bug-bounty/main/README.md";
+            const response = await fetch(url);
+            const text = await response.text();
+
+            const dorkList = document.getElementById("dorkList");
+            const regex = /(?:^### (.+)|```([^`]+)```)/gm;
+            let match;
+            let title = '';
+            let firstDork = true;
+
+            while ((match = regex.exec(text)) !== null) {
+        if (match[1]) {
+            // Title match
+            title = match[1];
+        } else if (match[2]) {
+            // Dork match
+            const dork = match[2].trim();
+            originalDorks.push(dork);
+            const listItem = createDorkListItem(dork, title);
+            dorkList.appendChild(listItem);
+        }
+    }
+    filterDorks();
+
+    }
+        
+    let prevTitle = '';
+
+        function createDorkListItem(dork, description) {
+            const googleLink = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
+
+            const listItem = document.createElement("li");
+
+            if (description && description !== prevTitle) {
+                const desc = document.createElement("p");
+                desc.textContent = description;
+                desc.classList.add("description");
+                listItem.appendChild(desc);
+                prevTitle = description;
+            }
+
+            const link = document.createElement("a");
+            link.href = googleLink;
+            link.textContent = dork;
+            link.classList.add("dorkLink");
+            link.target = "_blank";
+
+            listItem.appendChild(link);
+
+            return listItem;
+        }
+
+        function updateDomain() {
+            const domainInput = document.getElementById("domainInput");
+            const domains = domainInput.value.split(",").map(domain => domain.trim());
+        
+            if (domains.length === 0) return;
+        
+            const dorkLinks = document.querySelectorAll(".dorkLink");
+            dorkLinks.forEach((link, index) => {
+                let originalDork = originalDorks[index];
+                
+                // Check if the dork is related to Drupal and skip modification
+                if (originalDork.includes("Drupal")) {
+                    return; // Skip any modification if it's a Drupal related dork
+                }
+
+                // For site:example.com
+                if (/site:"?example\[?\.\]?com"?/i.test(originalDork)) {
+                    const joinedDomains = domains.map(d => `site:${d}`).join(" | ");
+                    originalDork = originalDork.replace(/site:"?example\[?\.\]?com"?/gi, joinedDomains);
+                }
+                
+                // For "example.com"
+                else if (/["']example\[?\.\]?com["']/i.test(originalDork)) {
+                    const joinedDomains = domains.map(d => `"${d}"`).join(" | ");
+                    originalDork = originalDork.replace(/["']example\[?\.\]?com["']/gi, joinedDomains);
+                }
+                
+                // For intext:"example.com" and similar patterns
+                const intextPattern = /intext:"example\.com"/gi;
+                if (intextPattern.test(originalDork)) {
+                    const joinedDomains = domains.map(d => `intext:"${d}"`).join(" | ");
+                    updatedDork = originalDork.replace(intextPattern, joinedDomains);
+                }
+                // Update intext:"" for all domains after the first
+                if (originalDork.includes('intext:"')) {
+                    const joinedDomains = domains.map((d, idx) => idx === 0 ? `intext:"${d}"` : `intext:"${d}"`).join(" | ");
+                    originalDork = originalDork.replace(/intext:"([^"]+)"/gi, joinedDomains);
+                    originalDork = originalDork.replace(/ \| "([^"]+)"/gi, " | ");
+                }
+
+                const updatedLink = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
+            
+                link.textContent = originalDork;
+                link.href = updatedLink;
+            });
+        }
+        
+        fetchDorks();
+        
+        function filterDorks() {
+    const dorkItems = document.querySelectorAll("#dorkList li");
+    dorkItems.forEach(item => {
+        if (item.textContent.toLowerCase().includes("omit")) {
+            item.style.display = "none";
+        }
+    });
+}
+
+    </script>
 </body>
 </html>
