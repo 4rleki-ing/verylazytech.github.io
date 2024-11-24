@@ -142,6 +142,16 @@
             display: none;
         }
 
+        pre {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 20px;
@@ -180,7 +190,8 @@
         <div id="tooltip">For multiple domains, separate by comma. e.g., example1.com, example2.com</div>
     </div>
 
-    <ul id="dorkList"></ul>
+    <!-- Code block where the dorks will be displayed -->
+    <pre id="dorkList"></pre>
 
     <script>
         const dorkListElement = document.getElementById("dorkList");
@@ -206,12 +217,12 @@
 
                     // Only append the title once when the first dork appears under a title
                     if (currentTitle) {
-                        dorkListElement.innerHTML += `<strong>${currentTitle}</strong><br>`;
+                        dorkListElement.innerHTML += `${currentTitle}\n`;
                         currentTitle = ''; // Reset the title to prevent repetition
                     }
 
-                    // Add the dork link below the title
-                    dorkListElement.innerHTML += `<a class="dorkLink" href="https://www.google.com/search?q=${encodeURIComponent(dork)}" target="_blank">${dork}</a><br>`;
+                    // Add the dork to the code block, separated by newline
+                    dorkListElement.innerHTML += `${dork}\n`;
                 }
             }
         }
@@ -227,16 +238,13 @@
                 let originalDork = originalDorks[index];
 
                 const domainPatterns = [
-                    /site:\s?"?example.com"?/gi, 
-                    /"example.com"/gi,
-                    /intext:"example.com"/gi
+                    /site:\s?"?example.com"?/g
                 ];
 
-                domainPatterns.forEach(pattern => {
-                    if (pattern.test(originalDork)) {
-                        const joinedDomains = domains.map(d => pattern.source.includes('intext') ? `intext:"${d}"` : `site:"${d}"`).join(" ");
-                        originalDork = originalDork.replace(pattern, joinedDomains);
-                    }
+                domains.forEach(domain => {
+                    domainPatterns.forEach(pattern => {
+                        originalDork = originalDork.replace(pattern, `site:"${domain}"`);
+                    });
                 });
 
                 link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
@@ -244,7 +252,7 @@
             });
         }
 
-        fetchDorks(); // Fetch dorks on page load
+        fetchDorks();
     </script>
 </body>
 </html>
