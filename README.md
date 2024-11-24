@@ -2,7 +2,7 @@
 
 A list of Google Dorks for Bug Bounty, Web Application Security, and Pentesting.
 
-![image](https://github.com/user-attachments/assets/4865ee71-ebb3-46fa-b5f9-73d7d74c374d)
+[![image](https://github.com/user-attachments/assets/4865ee71-ebb3-46fa-b5f9-73d7d74c374d)](https://verylazytech.github.io/index.html)
 
 Check our online tool: [VeryLazyTechDork](https://verylazytech.github.io/index.html)
 
