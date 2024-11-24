@@ -196,20 +196,26 @@
         
             const regex = /(?:^### (.+)|```([^`]+)```)/gm;
             let match, title = "";
-            let currentTitleElement = null;
+            
+            let currentTitle = ''; // Keep track of the current title
         
             while ((match = regex.exec(text)) !== null) {
                 if (match[1]) {
-                    // This is a title, so we create a new <h2> and add it to the page
-                    title = match[1];
-                    currentTitleElement = createTitleElement(title);
-                    dorkListElement.appendChild(currentTitleElement);
+                    // New section title found, save it
+                    currentTitle = match[1].trim();
                 } else if (match[2]) {
-                    // This is a dork, so add it under the current title
+                    // Dork found, associated with the previous title
                     const dork = match[2].trim();
-                    if (currentTitleElement) {
-                        currentTitleElement.appendChild(createDorkListItem(dork, title));
+                    originalDorks.push(dork); // Store dork for later use
+                    
+                    // Check if we have already added a title
+                    if (currentTitle) {
+                        dorkListElement.innerHTML += `<strong>${currentTitle}</strong><br>`;
+                        currentTitle = ''; // Reset title to prevent repeating
                     }
+        
+                    // Add the dork link directly under the title (same section)
+                    dorkListElement.innerHTML += `<a class="dorkLink" href="https://www.google.com/search?q=${encodeURIComponent(dork)}" target="_blank">${dork}</a><br>`;
                 }
             }
         }
