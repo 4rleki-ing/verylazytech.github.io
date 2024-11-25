@@ -225,6 +225,7 @@
                     // This regex matches the site part (site:"domain") and replaces it with the new domain
                     originalDork = originalDork.replace(/site:"[^"]+"/, `site:"${domain}"`);
                     originalDork = originalDork.replace(/"example\.com"/g, `"${domain}"`);
+                    originalDork = originalDork.replace(/"example\[.]com"/g, `"${domain}"`);
                 });
         
                 // Update the href and text of the dork link
