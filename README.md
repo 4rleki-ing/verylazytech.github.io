@@ -29,6 +29,11 @@ Check out the full list & start exploiting Google Dorks like a pro! 👇
 [![X](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fverylazytech)](https://x.com/verylazytech)
 ---
 
+### Join Slack Channels
+
+```
+ext:pdf invite "join slack" site:"example.com"
+```
 ### Broad domain search w/ negative search
 
 ```
