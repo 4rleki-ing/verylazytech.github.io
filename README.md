@@ -1,10 +1,20 @@
-# Google Dorks for Bug Bounty
+# 🚨 Google Dorks for Bug Bounty 🚨
 
-A list of Google Dorks for Bug Bounty, Web Application Security, and Pentesting.
+Level up your #BugBounty hunting with these essential Google Dorks for Web App Security & Pentesting! 💻🔍
+
+🔹 PHP Extension w/ Parameters
+🔹 API Endpoints
+🔹 Juicy Extensions
+🔹 SQLi / XSS / RCE Prone Params
+🔹 File Upload Endpoints
+🔹 Sensitive Docs & More!
+
+Check out the full list & start exploiting Google Dorks like a pro! 👇
+
+👉 [VeryLazyTechDork](https://verylazytech.github.io/index.html)
 
 [![image](https://github.com/user-attachments/assets/4865ee71-ebb3-46fa-b5f9-73d7d74c374d)](https://verylazytech.github.io/index.html)
 
-Check our online tool: [VeryLazyTechDork](https://verylazytech.github.io/index.html)
 
 [![My Shop](https://img.shields.io/badge/My%20Shop-verylazytech-%23FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=yellow)](https://buymeacoffee.com/verylazytech/extras)
 [![Medium](https://img.shields.io/badge/Medium-%40verylazytech-%231572B6?style=flat&logo=medium&logoColor=white)](https://medium.com/@verylazytech)
