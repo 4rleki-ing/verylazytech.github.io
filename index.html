@@ -219,12 +219,12 @@
         
             const dorkLinks = document.querySelectorAll(".dorkLink");
             dorkLinks.forEach((link, index) => {
-                let originalDork = originalDorks[index];  // Get the original dork for reference
+                let originalDork = originalDorks[index]; 
         
-                // Only replace the domain part after 'site:', preserving other dork parameters
                 domains.forEach(domain => {
                     // This regex matches the site part (site:"domain") and replaces it with the new domain
                     originalDork = originalDork.replace(/site:"[^"]+"/, `site:"${domain}"`);
+                    originalDork = originalDork.replace(/"example\.com"/g, `"${domain}"`);
                 });
         
                 // Update the href and text of the dork link
