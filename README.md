@@ -3,10 +3,15 @@
 Level up your #BugBounty hunting with these essential Google Dorks for Web App Security & Pentesting! 💻🔍
 
 🔹 PHP Extension w/ Parameters
+
 🔹 API Endpoints
+
 🔹 Juicy Extensions
+
 🔹 SQLi / XSS / RCE Prone Params
+
 🔹 File Upload Endpoints
+
 🔹 Sensitive Docs & More!
 
 Check out the full list & start exploiting Google Dorks like a pro! 👇
