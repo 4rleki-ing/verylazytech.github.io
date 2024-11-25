@@ -32,7 +32,7 @@ Check out the full list & start exploiting Google Dorks like a pro! 👇
 ### Join Slack Channels
 
 ```
-ext:pdf invite "join slack" site:"example.com"
+ext:pdf "invite" "join.slack" site:"example.com"
 ```
 ### Broad domain search w/ negative search
 
