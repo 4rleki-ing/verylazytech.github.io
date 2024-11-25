@@ -47,49 +47,49 @@ inurl:conf | inurl:env | inurl:cgi | inurl:bin | inurl:etc | inurl:root | inurl:
 ### Server Errors
 
 ```
-inurl:"error" | intitle:"exception" | intitle:"failure" | intitle:"server at" | inurl:exception | "database error" | "SQL syntax" | "undefined index" | "unhandled exception" | "stack trace" site:example[.]com
+inurl:"error" | intitle:"exception" | intitle:"failure" | intitle:"server at" | inurl:exception | "database error" | "SQL syntax" | "undefined index" | "unhandled exception" | "stack trace" site:"example[.]com"
 ```
 
 ### XSS prone parameters
 
 ```
-inurl:q= | inurl:s= | inurl:search= | inurl:query= | inurl:keyword= | inurl:lang= inurl:& site:example.com
+inurl:q= | inurl:s= | inurl:search= | inurl:query= | inurl:keyword= | inurl:lang= inurl:& site:"example.com"
 ```
 
 ### Open Redirect prone parameters
 
 ```
-inurl:url= | inurl:return= | inurl:next= | inurl:redirect= | inurl:redir= | inurl:ret= | inurl:r2= | inurl:page= inurl:& inurl:http site:example.com
+inurl:url= | inurl:return= | inurl:next= | inurl:redirect= | inurl:redir= | inurl:ret= | inurl:r2= | inurl:page= inurl:& inurl:http site:"example.com"
 ```
 
 ### SQLi Prone Parameters
 
 ```
-inurl:id= | inurl:pid= | inurl:category= | inurl:cat= | inurl:action= | inurl:sid= | inurl:dir= inurl:& site:example.com
+inurl:id= | inurl:pid= | inurl:category= | inurl:cat= | inurl:action= | inurl:sid= | inurl:dir= inurl:& site:"example.com"
 ```
 
 ### SSRF Prone Parameters
 
 ```
-inurl:http | inurl:url= | inurl:path= | inurl:dest= | inurl:html= | inurl:data= | inurl:domain=  | inurl:page= inurl:& site:example.com
+inurl:http | inurl:url= | inurl:path= | inurl:dest= | inurl:html= | inurl:data= | inurl:domain=  | inurl:page= inurl:& site:"example.com"
 ```
 
 ### LFI Prone Parameters
 
 ```
-inurl:include | inurl:dir | inurl:detail= | inurl:file= | inurl:folder= | inurl:inc= | inurl:locate= | inurl:doc= | inurl:conf= inurl:& site:example.com
+inurl:include | inurl:dir | inurl:detail= | inurl:file= | inurl:folder= | inurl:inc= | inurl:locate= | inurl:doc= | inurl:conf= inurl:& site:"example.com"
 ```
 
 ### RCE Prone Parameters
 
 ```
-inurl:cmd | inurl:exec= | inurl:query= | inurl:code= | inurl:do= | inurl:run= | inurl:read=  | inurl:ping= inurl:& site:example.com
+inurl:cmd | inurl:exec= | inurl:query= | inurl:code= | inurl:do= | inurl:run= | inurl:read=  | inurl:ping= inurl:& site:"example.com"
 ```
 
 ### File upload endpoints
 
 ```
-site:example.com ”choose file”
+site:"example.com" ”choose file”
 ```
 
 ### API Docs
@@ -101,32 +101,32 @@ inurl:apidocs | inurl:api-docs | inurl:swagger | inurl:api-explorer site:"exampl
 ### Login Pages
 
 ```
-inurl:login | inurl:signin | intitle:login | intitle:signin | inurl:secure site:example[.]com
+inurl:login | inurl:signin | intitle:login | intitle:signin | inurl:secure site:"example[.]com"
 ```
 
 ### Test Environments
 
 ```
-inurl:test | inurl:env | inurl:dev | inurl:staging | inurl:sandbox | inurl:debug | inurl:temp | inurl:internal | inurl:demo site:example.com
+inurl:test | inurl:env | inurl:dev | inurl:staging | inurl:sandbox | inurl:debug | inurl:temp | inurl:internal | inurl:demo site:"example.com"
 ```
 
 ### Sensitive Documents
 
 ```
-site:example.com ext:txt | ext:pdf | ext:xml | ext:xls | ext:xlsx | ext:ppt | ext:pptx | ext:doc | ext:docx
+site:"example.com" ext:txt | ext:pdf | ext:xml | ext:xls | ext:xlsx | ext:ppt | ext:pptx | ext:doc | ext:docx
 intext:“confidential” | intext:“Not for Public Release” | intext:”internal use only” | intext:“do not distribute”
 ```
 
 ### Sensitive Parameters
 
 ```
-inurl:email= | inurl:phone= | inurl:password= | inurl:secret= inurl:& site:example[.]com
+inurl:email= | inurl:phone= | inurl:password= | inurl:secret= inurl:& site:"example[.]com"
 ```
 
 ### Adobe Experience Manager (AEM)
 
 ```
-inurl:/content/usergenerated | inurl:/content/dam | inurl:/jcr:content | inurl:/libs/granite | inurl:/etc/clientlibs | inurl:/content/geometrixx | inurl:/bin/wcm | inurl:/crx/de site:example[.]com
+inurl:/content/usergenerated | inurl:/content/dam | inurl:/jcr:content | inurl:/libs/granite | inurl:/etc/clientlibs | inurl:/content/geometrixx | inurl:/bin/wcm | inurl:/crx/de site:"example[.]com"
 ```
 
 ### Disclosed XSS and Open Redirects
